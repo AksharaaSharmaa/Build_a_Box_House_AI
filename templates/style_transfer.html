@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Style Transfer Studio - Professional Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 56px;
+            background: #fff;
+            padding: 72px 0 40px 0;
+            border-radius: 0;
+            position: relative;
+            box-shadow: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .header h1 {
+            font-size: 3.6em;
+            margin-bottom: 0.2em;
+            color: #000;
+            font-weight: 900;
+            letter-spacing: -2.5px;
+            text-transform: none;
+            line-height: 1.05;
+        }
+        .header .hero-divider {
+            width: 80px;
+            height: 5px;
+            background: #FFD700;
+            border-radius: 3px;
+            margin: 18px auto 0 auto;
+            opacity: 0.9;
+        }
+        .header p {
+            font-size: 1.45em;
+            color: #222;
+            font-weight: 400;
+            margin-top: 18px;
+            letter-spacing: -0.2px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .back-btn {
+            background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            color: #FFFFFF;
+            border: 2px solid #6B7280;
+            padding: 8px 26px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.10);
+            position: absolute;
+            left: 40px;
+            top: 40px;
+            margin-bottom: 0;
+            display: inline-block;
+            text-decoration: none !important;
+            z-index: 2;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .instructions-section {
+            padding: 2.5rem 0 2rem 0;
+            background: none;
+            margin-bottom: 0;
+        }
+
+        .instructions-title {
+            margin-bottom: 2.2rem;
+            font-size: 2em;
+            font-weight: 900;
+            color: #000;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+        .instructions-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            max-width: 900px;
+            margin: 0 auto 2.5rem auto;
+        }
+        @media (max-width: 900px) {
+            .instructions-steps {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        .instruction-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            padding: 2.2rem 2rem 1.5rem 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            border: 2px solid #FFD700;
+            min-height: 120px;
+        }
+        .instruction-number {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(255,215,0,0.10);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .instruction-content {
+            flex: 1;
+        }
+        .instruction-title {
+            font-size: 1.15em;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 0.3em;
+        }
+        .instruction-desc {
+            font-size: 1.05em;
+            color: #222;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        .instructions-tip {
+            background: #fffbe6;
+            border: 2px solid #FFD700;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(255,215,0,0.06);
+            max-width: 900px;
+            margin: 0 auto 0 auto;
+            padding: 1.5rem 2rem 1.2rem 2rem;
+            font-size: 1.08em;
+            color: #222;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7em;
+        }
+
+        .parameter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .parameter-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .parameter-item strong {
+            color: #FFD700;
+            font-weight: 600;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title i {
+            color: #FFD700;
+            font-size: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+            border: 2px dashed #FFD700;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: #FFA500;
+            background: linear-gradient(135deg, #fffdf0 0%, #ffffff 100%);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-content {
+            pointer-events: none;
+        }
+
+        .file-input-content i {
+            font-size: 2.5rem;
+            color: #FFD700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .file-input-content .main-text {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-input-content .sub-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .img-preview {
+            display: none;
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .slider-group {
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .slider-value {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+            border: none;
+        }
+
+        select, input[type="number"], textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        select:focus, input[type="number"]:focus, textarea:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 1.25rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .result-img {
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(107, 114, 128, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(107, 114, 128, 0.4);
+        }
+
+        .edit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(107, 114, 128, 0.3);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .edit-btn:hover {
+            background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(107, 114, 128, 0.4);
+        }
+
+        .metadata {
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .metadata h4 {
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .metadata pre {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            color: #c62828;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #ffcdd2;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        /* New styles for sidebar */
+        .sidebar-left {
+            min-height: 700px;
+            position: sticky;
+            top: 40px;
+            background: #fff;
+            border-right: none;
+            padding: 32px 18px 32px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 22px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            min-width: 220px;
+            max-width: 260px;
+            height: auto;
+            gap: 18px;
+        }
+        .sidebar-title {
+            font-size: 1.25em;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 18px;
+            letter-spacing: -0.5px;
+        }
+        .image-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            align-items: center;
+        }
+        .image-thumb {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 2px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            opacity: 1;
+            transform: none;
+        }
+        .image-thumb.selected, .image-thumb:hover {
+            border: 2px solid #FFD700;
+            box-shadow: 0 4px 16px rgba(255,215,0,0.13);
+            transform: translateY(-2px) scale(1.04);
+        }
+
+        .mode-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(90deg, #6B7280 0%, #9CA3AF 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 16px rgba(107, 114, 128, 0.15);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+        }
+
+        .mode-btn:hover {
+            background: linear-gradient(90deg, #9CA3AF 0%, #6B7280 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.25);
+        }
+
+        .mode-btn.selected-mode {
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%) !important;
+            color: #1a1a1a !important;
+            box-shadow: 0 6px 24px rgba(255, 215, 0, 0.25);
+            border: 2px solid #FFD700;
+            outline: none;
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .main-container {
+                padding: 2rem 1rem;
+            }
+            
+            .instructions-section,
+            .form-section,
+            .result-section {
+                padding: 2rem;
+            }
+            
+            .form-grid,
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .parameter-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <a href="#" class="back-btn" id="backToDashboardBtn">← Back</a>
+        <h1>AI Style Transfer Studio</h1>
+        <div class="hero-divider"></div>
+        <p>Transform your images with cutting-edge artificial intelligence</p>
+    </header>
+
+    <div class="main-container" style="display: flex; gap: 40px; align-items: flex-start; margin-top: 20px;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar-left">
+            <div class="sidebar-title">House Images</div>
+            <div class="image-list" id="imageList">
+                <!-- Thumbnails will be injected here -->
+            </div>
+        </aside>
+        
+        <!-- MAIN CONTENT -->
+        <div style="flex: 1;">
+            <!-- INSTRUCTIONS -->
+            <section class="instructions-section">
+                <div class="instructions-title">How to Use</div>
+                <div class="instructions-steps">
+                    <div class="instruction-card">
+                        <div class="instruction-number">1</div>
+                        <div class="instruction-content">
+                            <div class="instruction-title">Select Image</div>
+                            <div class="instruction-desc">Choose a house image from the sidebar or upload your own.</div>
+                        </div>
+                    </div>
+                    <div class="instruction-card">
+                        <div class="instruction-number">2</div>
+                        <div class="instruction-content">
+                            <div class="instruction-title">Select Style</div>
+                            <div class="instruction-desc">Upload a style reference image to transfer its look to your target image.</div>
+                        </div>
+                    </div>
+                    <div class="instruction-card">
+                        <div class="instruction-number">3</div>
+                        <div class="instruction-content">
+                            <div class="instruction-title">Choose Mode</div>
+                            <div class="instruction-desc">Pick 'Precise' for subtle style transfer or 'Creative' for bold changes.</div>
+                        </div>
+                    </div>
+                    <div class="instruction-card">
+                        <div class="instruction-number">4</div>
+                        <div class="instruction-content">
+                            <div class="instruction-title">Apply & Download</div>
+                            <div class="instruction-desc">Click 'Generate' to see the result, then download your new image.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="instructions-tip">
+                    <div><b>Modes:</b> <b>Precise</b> is for subtle, faithful style transfer. <b>Creative</b> is for bold, artistic changes.</div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-sliders-h"></i>
+                    Configuration Panel
+                </div>
+                
+                <form id="styleTransferForm">
+                    <div style="display: flex; flex-direction: row; gap: 32px; align-items: flex-start; justify-content: center; margin-bottom: 2rem;">
+                        <div style="flex: 1; min-width: 350px; max-width: 500px; display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-size: 1.7rem; font-weight: 700; margin-bottom: 12px; color: #1a1a1a; text-align:center;">Target Image</div>
+                            <div class="form-group" style="display:inline-block; width:100%;">
+                                <div class="file-input-wrapper" style="display:inline-block; width:100%;">
+                                    <input type="file" name="target_image" accept="image/*" required id="targetImageInput" style="cursor:pointer;">
+                                    <div class="file-input-content">
+                                        <i class="fas fa-image"></i>
+                                        <div class="main-text">Upload Target Image</div>
+                                        <div class="sub-text">Click to select or drag & drop</div>
+                                    </div>
+                                </div>
+                                <img id="targetImgPreview" class="img-preview" alt="Target Preview" style="display:none; margin-top:16px; max-width:100%; max-height:400px; width:auto; height:400px; object-fit:contain; border-radius:16px; box-shadow:0 8px 32px rgba(0,0,0,0.1); cursor:pointer; margin:0 auto; background:none; border:none;" />
+                            </div>
+                        </div>
+                        <div style="flex: 1; min-width: 350px; max-width: 500px; display: flex; flex-direction: column; align-items: center;">
+                            <div style="font-size: 1.7rem; font-weight: 700; margin-bottom: 12px; color: #1a1a1a; text-align:center;">Style Reference Image</div>
+                            <div class="form-group" style="display:inline-block; width:100%;">
+                                <div id="styleUploadBox">
+                                    <div class="file-input-wrapper" style="display:inline-block; width:100%;">
+                                        <input type="file" name="style_image" accept="image/*" required id="styleImageInput" style="cursor:pointer;">
+                                        <div class="file-input-content">
+                                            <i class="fas fa-palette"></i>
+                                            <div class="main-text">Upload Style Reference</div>
+                                            <div class="sub-text">Click to select or drag & drop</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img id="styleImgPreview" class="img-preview" alt="Style Preview" style="display:none; margin-top:16px; max-width:100%; max-height:400px; width:auto; height:400px; object-fit:contain; border-radius:16px; box-shadow:0 8px 32px rgba(0,0,0,0.1); cursor:pointer; margin:0 auto; background:none; border:none;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remove the three sliders and replace with two buttons -->
+                    <div style="display: flex; flex-direction: row; gap: 24px; justify-content: center; margin-bottom: 2rem;">
+                        <button type="button" id="preciseBtn" class="mode-btn">Precise Style Transfer</button>
+                        <button type="button" id="creativeBtn" class="mode-btn">Creative Style Transfer</button>
+                    </div>
+                    <input type="hidden" name="style_strength" id="styleStrengthInput" value="0.7">
+                    <input type="hidden" name="composition_fidelity" id="compositionFidelityInput" value="0.9">
+                    <input type="hidden" name="change_strength" id="changeStrengthInput" value="0.6">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Output Format</label>
+                            <select name="output_format">
+                                <option value="jpeg">JPEG - Best for photographs</option>
+                                <option value="png">PNG - Best for graphics with transparency</option>
+                                <option value="webp">WebP - Best compression and quality</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Positive Prompt</label>
+                            <textarea name="prompt" placeholder="Describe elements you want to enhance (e.g., vibrant colors, sharp details, artistic brushstrokes)..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="styleTransferSubmitBtn">
+                        <i class="fas fa-magic"></i>
+                        Apply Style Transfer
+                    </button>
+                </form>
+            </section>
+
+            <section id="styleTransferResult" class="result-section" style="display:none;">
+                <div class="section-title">
+                    <i class="fas fa-check-circle"></i>
+                    Your Transformed Image
+                </div>
+                
+                <img id="styleTransferResultImg" class="result-img" src="" alt="Style Transfer Result">
+                
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
+                    <a id="styleTransferDownloadLink" href="#" class="download-btn" download>
+                        <i class="fas fa-download"></i>
+                        Download High-Quality Result
+                    </a>
+                    <button id="editStyleTransferBtn" class="edit-btn">
+                        <i class="fas fa-edit"></i>
+                        Edit Image
+                    </button>
+                </div>
+            </section>
+
+            <div id="styleTransferErrorMsg" class="error-message" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Image preview functionality with enhanced UI feedback
+        const styleImageInput = document.getElementById('styleImageInput');
+        const targetImageInput = document.getElementById('targetImageInput');
+        const styleImgPreview = document.getElementById('styleImgPreview');
+        const targetImgPreview = document.getElementById('targetImgPreview');
+        
+        function setupImagePreview(input, preview) {
+            input.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        preview.src = ev.target.result;
+                        preview.style.display = 'block';
+                        // Hide upload box when image is uploaded
+                        if (input.id === 'styleImageInput') {
+                            document.getElementById('styleUploadBox').style.display = 'none';
+                        }
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    preview.style.display = 'none';
+                    // Show upload box if image is removed
+                    if (input.id === 'styleImageInput') {
+                        document.getElementById('styleUploadBox').style.display = 'inline-block';
+                    }
+                }
+            });
+            // Make preview clickable to re-upload
+            if (input.id === 'styleImageInput') {
+                preview.addEventListener('click', function() {
+                    input.click();
+                });
+            }
+        }
+        
+        setupImagePreview(styleImageInput, styleImgPreview);
+        setupImagePreview(targetImageInput, targetImgPreview);
+        
+        // Enhanced form submission with professional feedback
+        const styleTransferForm = document.getElementById('styleTransferForm');
+        const styleTransferResult = document.getElementById('styleTransferResult');
+        const styleTransferResultImg = document.getElementById('styleTransferResultImg');
+        const styleTransferErrorMsg = document.getElementById('styleTransferErrorMsg');
+        const styleTransferDownloadLink = document.getElementById('styleTransferDownloadLink');
+        const styleTransferSubmitBtn = document.getElementById('styleTransferSubmitBtn');
+        
+        styleTransferForm.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            // Reset UI state
+            styleTransferErrorMsg.style.display = 'none';
+            styleTransferResult.style.display = 'none';
+            
+            // Update button state with loading animation
+            styleTransferSubmitBtn.disabled = true;
+            styleTransferSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Your Images...';
+            
+            const formData = new FormData(styleTransferForm);
+            
+            // Hardcode seed and negative_prompt
+            formData.set('seed', '0');
+            formData.set('negative_prompt', 'blurry, distorted, deformed, low quality, artifacts, oversaturated, noise');
+            
+            try {
+                const res = await fetch('/style-transfer', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'An unexpected error occurred during processing');
+                }
+                
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                
+                styleTransferResultImg.src = url;
+                styleTransferDownloadLink.href = url;
+                styleTransferDownloadLink.download = `style_transfer_result_${Date.now()}.${formData.get('output_format')}`;
+                
+                styleTransferResult.style.display = 'block';
+                
+                // Smooth scroll to result
+                styleTransferResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            } catch (err) {
+                styleTransferErrorMsg.textContent = `Error: ${err.message}`;
+                styleTransferErrorMsg.style.display = 'block';
+                styleTransferErrorMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } finally {
+                // Reset button state
+                styleTransferSubmitBtn.disabled = false;
+                styleTransferSubmitBtn.innerHTML = '<i class="fas fa-magic"></i> Apply Style Transfer';
+            }
+        };
+
+        // Enhanced drag and drop functionality
+        function setupDragAndDrop(wrapper, input) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                wrapper.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                wrapper.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                wrapper.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                wrapper.style.border = '2px solid #FFA500';
+                wrapper.style.background = 'linear-gradient(135deg, #fff8e1 0%, #ffffff 100%)';
+                wrapper.style.transform = 'scale(1.02)';
+            }
+
+            function unhighlight(e) {
+                wrapper.style.border = '2px dashed #FFD700';
+                wrapper.style.background = 'linear-gradient(135deg, #fafafa 0%, #ffffff 100%)';
+                wrapper.style.transform = 'scale(1)';
+            }
+
+            wrapper.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length > 0) {
+                    input.files = files;
+                    input.dispatchEvent(new Event('change'));
+                }
+            }
+        }
+
+        // Setup drag and drop for both file inputs
+        const styleWrapper = styleImageInput.parentElement;
+        setupDragAndDrop(styleWrapper, styleImageInput);
+
+        // Add smooth transitions and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe sections for animation
+            document.querySelectorAll('.instructions-section, .form-section').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+
+            // Add hover effects to instruction steps
+            document.querySelectorAll('.instruction-step').forEach(step => {
+                step.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(8px)';
+                });
+                
+                step.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+
+            // Load images when page loads
+            loadHouseImages();
+        });
+
+        // Real-time parameter validation and feedback
+        const sliders = document.querySelectorAll('input[type="range"]');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', function() {
+                // Add visual feedback for extreme values
+                const value = parseFloat(this.value);
+                const valueDisplay = document.getElementById(this.getAttribute('oninput').split('.')[0]);
+                
+                if (value < 0.3 || value > 0.8) {
+                    valueDisplay.style.background = 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)';
+                } else {
+                    valueDisplay.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
+                }
+            });
+        });
+
+        // Advanced form validation
+        function validateForm() {
+            const styleImage = styleImageInput.files[0];
+            
+            if (!styleImage) {
+                return false;
+            }
+            
+            // Check file sizes (optional - add reasonable limits)
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            if (styleImage.size > maxSize) {
+                alert('Please ensure the style reference image is under 10MB for optimal processing.');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Update form submission to include validation
+        const originalSubmitHandler = styleTransferForm.onsubmit;
+        styleTransferForm.onsubmit = function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+                return false;
+            }
+            return originalSubmitHandler.call(this, e);
+        };
+
+        // Add logic for mode buttons
+        const preciseBtn = document.getElementById('preciseBtn');
+        const creativeBtn = document.getElementById('creativeBtn');
+        const styleStrengthInput = document.getElementById('styleStrengthInput');
+        const compositionFidelityInput = document.getElementById('compositionFidelityInput');
+        const changeStrengthInput = document.getElementById('changeStrengthInput');
+
+        function setMode(mode) {
+            if (mode === 'precise') {
+                styleStrengthInput.value = '0.8';
+                compositionFidelityInput.value = '0.8';
+                changeStrengthInput.value = '0.7';
+                preciseBtn.classList.add('selected-mode');
+                creativeBtn.classList.remove('selected-mode');
+            } else if (mode === 'creative') {
+                styleStrengthInput.value = '0.9';
+                compositionFidelityInput.value = '0.6';
+                changeStrengthInput.value = '0.9';
+                creativeBtn.classList.add('selected-mode');
+                preciseBtn.classList.remove('selected-mode');
+            }
+        }
+
+        preciseBtn.addEventListener('click', function() { setMode('precise'); });
+        creativeBtn.addEventListener('click', function() { setMode('creative'); });
+        // Set default mode to precise
+        setMode('precise');
+
+        document.getElementById('backToDashboardBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            sessionStorage.setItem('showDashboardOnce', '1');
+            window.location.href = '/';
+        });
+
+        // Add sidebar functionality
+        function loadHouseImages() {
+            fetch('/list-house-images')
+                .then(res => res.json())
+                .then(data => {
+                    const imageList = document.getElementById('imageList');
+                    imageList.innerHTML = '';
+                    if (data.images && data.images.length > 0) {
+                        data.images.forEach((imgUrl, index) => {
+                            const img = document.createElement('img');
+                            img.src = imgUrl;
+                            img.alt = 'House Image ' + (index + 1);
+                            img.className = 'image-thumb';
+                            img.dataset.index = index;
+
+                            img.addEventListener('click', function() {
+                                document.querySelectorAll('.image-thumb').forEach(thumb => {
+                                    thumb.classList.remove('selected');
+                                });
+                                this.classList.add('selected');
+                                
+                                // Set the selected image as target input for style transfer
+                                const targetImageInput = document.getElementById('targetImageInput');
+                                if (targetImageInput) {
+                                    // Create a file from the image URL
+                                    fetch(this.src)
+                                        .then(response => response.blob())
+                                        .then(blob => {
+                                            // Create a File object
+                                            const file = new File([blob], 'selected_image.jpg', { type: 'image/jpeg' });
+                                            
+                                            // Create a FileList-like object
+                                            const dataTransfer = new DataTransfer();
+                                            dataTransfer.items.add(file);
+                                            targetImageInput.files = dataTransfer.files;
+                                            
+                                            // Hide the upload box and show the preview
+                                            const targetUploadBox = targetImageInput.parentElement;
+                                            if (targetUploadBox) {
+                                                targetUploadBox.style.display = 'none';
+                                            }
+                                            
+                                            // Trigger the change event to update the preview
+                                            const event = new Event('change', { bubbles: true });
+                                            targetImageInput.dispatchEvent(event);
+                                            
+                                            console.log('Selected image for style transfer:', this.src);
+                                        })
+                                        .catch(error => {
+                                            console.error('Error loading image:', error);
+                                        });
+                                }
+                            });
+
+                            imageList.appendChild(img);
+                        });
+                        animateImagesIn();
+                    } else {
+                        imageList.innerHTML = '<div style="color:#aaa;font-size:1rem;margin-top:24px;">No images found</div>';
+                    }
+                })
+                .catch(() => {
+                    const imageList = document.getElementById('imageList');
+                    imageList.innerHTML = '<div style="color:#aaa;font-size:1rem;margin-top:24px;">Failed to load images</div>';
+                });
+        }
+
+        function animateImagesIn() {
+            const images = document.querySelectorAll('.image-thumb');
+            images.forEach((img, index) => {
+                setTimeout(() => {
+                    img.classList.add('slide-in');
+                }, index * 100);
+            });
+        }
+
+        // Edit button functionality
+        document.getElementById('editStyleTransferBtn').addEventListener('click', function() {
+            const resultImg = document.getElementById('styleTransferResultImg');
+            if (resultImg.src) {
+                // Store the generated image URL in sessionStorage
+                sessionStorage.setItem('editImageUrl', resultImg.src);
+                sessionStorage.setItem('editImageSource', 'style_transfer');
+                
+                // Navigate to mask.html
+                window.location.href = '/mask-page';
+            } else {
+                alert('No image available to edit. Please generate a style transfer result first.');
+            }
+        });
+    </script>
+</body>
+</html>

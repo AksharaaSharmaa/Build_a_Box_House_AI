@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build a Box House</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 50%, #f5f5f5 100%);
+            position: relative;
+            padding: 0;
+            margin: 0;
+        }
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, label, .btn, .back-btn, .download-btn, .action-btn {
+            font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+        }
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            z-index: 0;
+            animation: floatShape 12s ease-in-out infinite alternate;
+            filter: blur(1px);
+        }
+        .bg-shape1 {
+            width: 180px; height: 180px;
+            background: #fff3cd;
+            top: 10%; left: 12%;
+            animation-delay: 0s;
+        }
+        .bg-shape2 {
+            width: 120px; height: 120px;
+            background: #ffeaa7;
+            top: 60%; left: 70%;
+            animation-delay: 2s;
+        }
+        .bg-shape3 {
+            width: 90px; height: 90px;
+            background: #fff3cd;
+            top: 75%; left: 20%;
+            animation-delay: 4s;
+        }
+        @keyframes floatShape {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            50% { transform: translateY(-40px) scale(1.12) rotate(180deg); }
+            100% { transform: translateY(-20px) scale(1.05) rotate(360deg); }
+        }
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .password-section {
+            background: #ffffff;
+            padding: 48px 40px 40px 40px;
+            border-radius: 8px;
+            border: none;
+            border-top: 3px solid #FFD700;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.8s cubic-bezier(.4,0,.2,1);
+            opacity: 1;
+            transform: translateY(40px) scale(0.97);
+            animation: passwordBoxIn 1.2s cubic-bezier(.22,1.15,.47,1.01) 0.2s forwards;
+            position: relative;
+            max-width: 400px;
+            width: 100%;
+        }
+        @keyframes passwordBoxIn {
+            0% { opacity: 0; transform: translateY(100px) scale(0.88); }
+            60% { opacity: 1; transform: translateY(-15px) scale(1.06); }
+            80% { transform: translateY(6px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .password-section.fade-out {
+            opacity: 0;
+            transform: translateY(-40px) scale(0.95);
+            pointer-events: none;
+        }
+
+        .password-section h2 {
+            margin-bottom: 32px;
+            font-size: 1.8rem;
+            color: #374151;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .password-input {
+            border: 1px solid #d1d5db;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 24px;
+            outline: none;
+            font-family: inherit;
+            color: #374151;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        .password-input:focus {
+            border: 1px solid #FFD700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+        .submit-btn {
+            background: #FFD700;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .submit-btn:hover {
+            background: #FFA500;
+            transform: translateY(-1px);
+        }
+        .error-message {
+            color: #dc2626;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            text-align: left;
+        }
+        .error-message.show { opacity: 1; }
+        .centered-heading-wrapper {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background: #ffffff;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .centered-heading-wrapper.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .centered-heading-wrapper.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .heading {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            position: relative;
+        }
+        .heading-word {
+            opacity: 0;
+            transform: scale(0.7) rotateY(60deg) translateY(40px);
+            display: inline-block;
+            margin: 0 0.18em;
+            transition: none;
+        }
+        .heading-word.animated-in {
+            animation: wordIn 0.8s cubic-bezier(.22,1.15,.47,1.01) forwards;
+        }
+        .heading-word.animated-out {
+            animation: wordOut 0.7s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes wordIn {
+            0% { opacity: 0; transform: scale(0.7) rotateY(60deg) translateY(40px); }
+            60% { opacity: 1; transform: scale(1.15) rotateY(-10deg) translateY(-8px); }
+            80% { transform: scale(0.97) rotateY(3deg) translateY(2px); }
+            100% { opacity: 1; transform: scale(1) rotateY(0deg) translateY(0); }
+        }
+        @keyframes wordOut {
+            0% { opacity: 1; transform: scale(1) rotateY(0deg) translateY(0); }
+            100% { opacity: 0; transform: scale(1.3) rotateY(60deg) translateY(-60px); }
+        }
+        .heading-underline {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            bottom: -12px;
+            height: 4px;
+            width: 80%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            border-radius: 2px;
+            opacity: 0.85;
+            animation: none;
+        }
+        .heading-underline.animated-in {
+            animation: underlineIn 0.7s 0.5s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        .heading-underline.animated-out {
+            animation: underlineOut 0.5s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes underlineIn {
+            0% { transform: translateX(-50%) scaleX(0); opacity: 0; }
+            60% { opacity: 1; }
+            100% { transform: translateX(-50%) scaleX(1); opacity: 0.85; }
+        }
+        @keyframes underlineOut {
+            0% { transform: translateX(-50%) scaleX(1); opacity: 0.85; }
+            100% { transform: translateX(-50%) scaleX(0); opacity: 0; }
+        }
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(30px);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.04);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .main-app {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 50%, #f5f5f5 100%);
+            padding-top: 90px;
+        }
+        .hero-section {
+            text-align: center;
+            padding: 140px 40px 100px;
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+        }
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #000000;
+            margin: 0 0 32px 0;
+            line-height: 1.05;
+            letter-spacing: -3px;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+            background: linear-gradient(135deg, #000000 0%, #333333 50%, #000000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.1)); }
+            100% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.2)); }
+        }
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #444444;
+            margin-bottom: 56px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+            line-height: 1.7;
+            letter-spacing: -0.3px;
+        }
+        .hero-cta {
+            display: inline-block;
+            padding: 20px 48px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+        .hero-cta:hover {
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.5);
+            border-color: #000000;
+        }
+        .services-section {
+            padding: 120px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            margin-top: 80px;
+        }
+        .service-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            border-radius: 28px;
+            padding: 56px 40px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(.4,0,.2,1);
+            cursor: pointer;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+            transform: scaleX(0);
+            transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+        }
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+        .service-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.12);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 32px;
+            display: block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .service-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000000;
+            margin: 0 0 20px 0;
+            letter-spacing: -0.8px;
+            text-transform: uppercase;
+        }
+        .service-description {
+            font-size: 1.1rem;
+            color: #444444;
+            margin-bottom: 40px; 
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        .service-button {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+            border: 2px solid #FFD700;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 24px rgba(255, 215, 0, 0.3);
+            position: relative; 
+            overflow: hidden; 
+        }
+        .service-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        .service-button:hover::before {
+            left: 100%;
+        }
+        .service-button:hover {
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+            color: #000000;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.5);
+            border-color: #000000;
+        }
+        .page-content {
+            display: none;
+            padding: 40px;
+            border-radius: 20px;
+            background: #ffffff;
+            margin: 40px auto;
+            max-width: 1200px;
+            border: 1px solid #e5e7eb;
+        }
+        .page-content.active {
+            display: block;
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 32px;
+            font-size: 1rem;
+            color: #FFD700;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        .back-button:hover {
+            color: #FFA500;
+        }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000000;
+            margin: 0 0 32px 0;
+            letter-spacing: -1px;
+            position: relative;
+        }
+        .page-title:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            bottom: -12px;
+            left: 0;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            border-radius: 2px;
+        }
+        .content-area {
+            margin-top: 32px;
+        }
+        .content-area h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .content-area p {
+            font-size: 1.1rem;
+            color: #333333;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .footer {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .footer-highlight {
+            color: #FFD700;
+            font-weight: 600;
+        }
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .hero-title {
+                font-size: 3rem;
+            }
+            .nav-container {
+                padding: 0 20px;
+            }
+            .services-section {
+                padding: 80px 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            .service-card {
+                padding: 32px 24px;
+            }
+            .service-title {
+                font-size: 1.3rem;
+            }
+            .service-description {
+                font-size: 0.95rem;
+            }
+            .page-title {
+                font-size: 2rem;
+            }
+            .hero-section {
+                padding: 100px 20px 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shape bg-shape1"></div>
+    <div class="bg-shape bg-shape2"></div>
+    <div class="bg-shape bg-shape3"></div>
+    <div class="container">
+        <div class="password-section" id="passwordSection">
+            <h2>SIGN IN</h2>
+            <div style="margin-bottom: 16px;">
+                <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 4px; text-align: left;">Password</div>
+                <input type="password" class="password-input" id="passwordInput" placeholder="Enter password" autocomplete="off">
+            </div>
+            <button class="submit-btn" onclick="checkPassword()">LOG IN</button>
+            <div class="error-message" id="errorMessage">wrong password</div>
+        </div>
+            </div>
+    <div class="centered-heading-wrapper" id="centeredHeadingWrapper">
+        <h1 class="heading" id="mainHeading"></h1>
+        <div class="heading-underline" id="headingUnderline"></div>
+    </div>
+    <div id="newAppMain" style="display:none;">
+        <nav class="header-nav">
+            <div class="nav-container">
+                <a href="#" class="logo">BUILD A BOX HOUSE</a>
+            </div>
+        </nav>
+        <div class="main-app">
+            <div id="homepage">
+                <section class="hero-section">
+                    <h1 class="hero-title">Your Box. Your Rules. Our Stage</h1>
+                    <p class="hero-subtitle">Transform your vision into reality with our professional AI-powered design assistant. Create stunning, sustainable homes with cutting-edge technology and precision engineering.</p>
+                </section>
+                <section class="services-section" id="services">
+                    <div class="services-grid">
+                        <div class="service-card" onclick="window.location.href='/image-to-text'">
+                            <div class="service-icon">🎨</div>
+                            <h3 class="service-title">Generate Images</h3>
+                            <p class="service-description">Simply describe your dream box and watch it come to life with our advanced AI technology.</p>
+                            <button class="service-button">Create Design</button>
+                </div>
+                        <div class="service-card" onclick="window.location.href='/mask-page'">
+                            <div class="service-icon">🔧</div>
+                            <h3 class="service-title">Smart Masking</h3>
+                            <p class="service-description">Draw, modify, and reshape your home with intelligent masking tools.</p>
+                            <button class="service-button">Edit Structure</button>
+                        </div>
+                        <div class="service-card" onclick="window.location.href='/style-transfer-page'">
+                            <div class="service-icon">✨</div>
+                            <h3 class="service-title">Style Transfer</h3>
+                            <p class="service-description">Transform your house with the aesthetic of any reference image you choose.</p>
+                            <button class="service-button">Transform Style</button>
+                        </div>
+                    </div>
+                </section>
+                </div>
+
+                        </div>
+        <footer class="footer">
+            <div class="footer-content">
+                <p>Powered by <span class="footer-highlight">Advanced AI Technology</span> | Building Dreams, One Box at a Time</p>
+            </div>
+        </footer>
+    </div>
+    <script>
+        // On page load, check for the session flag
+        if (sessionStorage.getItem('showDashboardOnce') === '1') {
+            sessionStorage.removeItem('showDashboardOnce');
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('centeredHeadingWrapper').style.display = 'none';
+            document.querySelectorAll('.bg-shape').forEach(el => el.style.display = 'none');
+            document.getElementById('newAppMain').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+        // Heading Animation Logic
+        const headingText = 'Your Box. Your Rules. Our Stage';
+        const mainHeading = document.getElementById('mainHeading');
+        const words = headingText.split(' ');
+        mainHeading.innerHTML = '';
+        words.forEach((word, i) => {
+            const span = document.createElement('span');
+            span.className = 'heading-word';
+            span.textContent = word + (i < words.length - 1 ? ' ' : '');
+            mainHeading.appendChild(span);
+        });
+        const headingWords = Array.from(document.querySelectorAll('.heading-word'));
+        const headingUnderline = document.getElementById('headingUnderline');
+
+        function animateHeadingIn() {
+            headingWords.forEach((word, i) => {
+                setTimeout(() => {
+                    word.classList.add('animated-in');
+                }, i * 120);
+            });
+            setTimeout(() => {
+                headingUnderline.classList.add('animated-in');
+            }, 200);
+        }
+        function animateHeadingOut() {
+            headingWords.forEach((word, i) => {
+                setTimeout(() => {
+                    word.classList.remove('animated-in');
+                    word.classList.add('animated-out');
+                }, i * 60);
+            });
+            headingUnderline.classList.remove('animated-in');
+            headingUnderline.classList.add('animated-out');
+        }
+        function resetHeading() {
+            headingWords.forEach(word => {
+                word.classList.remove('animated-in', 'animated-out');
+            });
+            headingUnderline.classList.remove('animated-in', 'animated-out');
+        }
+        function hideAllContent() {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('centeredHeadingWrapper').style.display = 'none';
+            document.querySelectorAll('.bg-shape').forEach(el => el.style.display = 'none');
+            document.getElementById('newAppMain').style.display = 'block';
+        }
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const errorMessage = document.getElementById('errorMessage');
+            if (password === 'buildaboxhouse') {
+                const passwordSection = document.getElementById('passwordSection');
+                passwordSection.classList.add('fade-out');
+                setTimeout(() => {
+                    passwordSection.style.display = 'none';
+                }, 100);
+                setTimeout(() => {
+                    const wrapper = document.getElementById('centeredHeadingWrapper');
+                    wrapper.classList.add('show');
+                    resetHeading();
+                    animateHeadingIn();
+                    setTimeout(() => {
+                        animateHeadingOut();
+                        setTimeout(() => {
+                            wrapper.classList.remove('show');
+                            wrapper.classList.add('hide');
+                            setTimeout(hideAllContent, 400);
+                        }, 900);
+                    }, 2000);
+                }, 700);
+                errorMessage.classList.remove('show');
+            } else {
+                errorMessage.classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+
+        function showGeneratePlaceholder() {
+            document.getElementById('homepage').style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'page-content';
+            placeholder.style.display = 'block';
+            placeholder.innerHTML = `
+                <a href="#" class="back-button" onclick="showHomepage()">← Back to Home</a>
+                <h2 class="page-title">Generate Images from Scratch</h2>
+                <div class="content-area">
+                    <h3>Text-to-Image Generation</h3>
+                    <p>Describe your dream home and our AI will create it for you. From modern minimalist designs to cozy cottages, the possibilities are endless.</p>
+                    <p><em>This feature is coming soon! For now, try our Smart Masking or Style Transfer tools.</em></p>
+                </div>
+            `;
+            document.querySelector('.main-app').appendChild(placeholder);
+            window.scrollTo(0, 0);
+        }
+        
+        function showHomepage() {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.remove();
+            });
+            document.getElementById('homepage').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header-nav');
+                if (window.scrollY > 50) {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                    header.style.backdropFilter = 'blur(20px)';
+        } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                    header.style.backdropFilter = 'blur(20px)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

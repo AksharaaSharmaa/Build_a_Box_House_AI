@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Image Generation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+        
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            transition: color 0.2s ease;
+        }
+        
+        .logo:hover {
+            color: #f59e0b;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 32px;
+        }
+        
+        .back-button {
+            background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            color: #FFFFFF;
+            border: 2.5px solid #6B7280;
+            padding: 18px 44px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 24px rgba(107, 114, 128, 0.18);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 32px;
+            display: inline-block;
+            text-decoration: none !important;
+        }
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        .back-button:hover::before {
+            left: 100%;
+        }
+        .back-button:hover {
+            background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+            color: #FFFFFF;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(107, 114, 128, 0.25);
+            border-color: #9CA3AF;
+        }
+        
+        .main-heading {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .main-heading h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        
+        .main-heading p {
+            font-size: 1.1rem;
+            color: #6b7280;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .main-flex {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+            margin-bottom: 60px;
+        }
+        
+        .generation-box, .result-box {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .generation-box h2, .result-box h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+        
+        .prompt-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            background: #ffffff;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+            line-height: 1.6;
+        }
+        
+        .prompt-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        
+        .prompt-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000000;
+            border: 2.5px solid #FFD700;
+            padding: 18px 44px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 24px rgba(255, 215, 0, 0.18);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+        .generate-btn:hover {
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+            color: #000000;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.25);
+            border-color: #FFA500;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            color: #FFFFFF;
+            border: 2.5px solid #6B7280;
+            padding: 18px 44px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(.4,0,.2,1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 24px rgba(107, 114, 128, 0.18);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        .download-btn:hover::before {
+            left: 100%;
+        }
+        .download-btn:hover {
+            background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+            color: #FFFFFF;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(107, 114, 128, 0.25);
+            border-color: #9CA3AF;
+        }
+        
+        .result-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 400px;
+        }
+        
+        .loading {
+            display: none;
+            margin: 60px 0;
+            font-size: 1rem;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f59e0b;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .generated-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e5e5;
+        }
+        
+        .placeholder-content {
+            text-align: center;
+            color: #9ca3af;
+            margin-top: 80px;
+        }
+        
+        .placeholder-content svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+        
+        .placeholder-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .placeholder-content p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-flex {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            
+            .main-heading h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px 16px;
+            }
+            
+            .generation-box, .result-box {
+                padding: 24px;
+            }
+            
+            .main-heading h1 {
+                font-size: 1.75rem;
+            }
+            
+            .main-heading p {
+                font-size: 1rem;
+            }
+            
+            .nav-container {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="header-nav">
+        <div class="nav-container">
+            <a href="/" class="logo">BUILD A BOX HOUSE</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="/" class="back-button" onclick="sessionStorage.setItem('showDashboardOnce','1')">← Back</a>
+        
+        <div class="main-heading">
+            <h1>AI House Design Generator</h1>
+            <p>Transform your ideas into stunning architectural designs with our advanced AI technology</p>
+        </div>
+        
+        <div class="main-flex">
+            <div class="generation-box">
+                <h2>Describe Your Vision</h2>
+                <textarea class="prompt-input" placeholder="Enter a detailed description of your dream house design. Include architectural style, materials, layout, and any specific features you'd like to see..."></textarea>
+                <button class="generate-btn" onclick="generateImage()">Generate Design</button>
+            </div>
+            
+            <div class="result-box">
+                <h2>Generated Design</h2>
+                <div class="loading">Creating your design</div>
+                <img class="generated-image" id="generatedImage" alt="Generated house design">
+                
+                <div class="placeholder-content">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21,15 16,10 5,21"/>
+                    </svg>
+                    <h3>Your design will appear here</h3>
+                    <p>Enter a description and click generate to create your architectural design</p>
+                </div>
+            </div>
+        </div>
+        <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;">
+            <button class="download-btn" id="downloadBtn" style="display:none; margin: 0 auto 0 auto;">Download Image</button>
+            <button class="download-btn" id="editBtn" style="display:none; margin: 0 auto 0 auto;">Edit Image</button>
+        </div>
+    </div>
+
+    <script>
+        let generatedImageUrl = null;
+        async function generateImage() {
+            const promptInput = document.querySelector('.prompt-input');
+            const loadingDiv = document.querySelector('.loading');
+            const generatedImage = document.getElementById('generatedImage');
+            const generateBtn = document.querySelector('.generate-btn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const placeholder = document.querySelector('.placeholder-content');
+
+            if (!promptInput.value.trim()) {
+                alert('Please enter a description for your house design');
+                return;
+            }
+
+            // Show loading state
+            loadingDiv.style.display = 'block';
+            generatedImage.style.display = 'none';
+            downloadBtn.style.display = 'none';
+            generateBtn.disabled = true;
+            if (placeholder) placeholder.style.display = '';
+
+            try {
+                const formData = new FormData();
+                formData.append('prompt', promptInput.value.trim());
+                // Optionally add more fields: aspect_ratio, seed, output_format
+                const response = await fetch('/text-to-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to generate image');
+                }
+                generatedImageUrl = data.image_data;
+                generatedImage.src = generatedImageUrl;
+                generatedImage.style.display = 'block';
+                downloadBtn.style.display = 'inline-block';
+                if (placeholder) placeholder.style.display = 'none';
+                // Show Edit Image button
+                document.getElementById('editBtn').style.display = 'inline-block';
+            } catch (error) {
+                alert('Error generating image: ' + error.message);
+            } finally {
+                loadingDiv.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+        document.getElementById('downloadBtn').onclick = function() {
+            if (generatedImageUrl) {
+                const a = document.createElement('a');
+                a.href = generatedImageUrl;
+                a.download = 'generated_house.png';
+                a.click();
+            }
+        };
+        document.getElementById('editBtn').onclick = function() {
+            if (generatedImageUrl) {
+                localStorage.setItem('yourImageData', generatedImageUrl);
+                localStorage.setItem('yourImageSessionId', ''); // Clear session id if any
+                window.location.href = '/mask-page';
+            }
+        };
+    </script>
+</body>
+</html>
