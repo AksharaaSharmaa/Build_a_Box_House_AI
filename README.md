@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/yourusername/stable-diffusion-house-modifier/main/assets/logo.png" alt="Stable Diffusion House Modifier" width="200" height="200">
-
 # 🏠✨ **Stable Diffusion House Modifier**
 
 *Transform Your Architectural Dreams into Reality with AI*
@@ -13,7 +11,7 @@
 
 <br>
 
-**🚀 [Live Demo](https://your-demo-url.com) | 📚 [Documentation](https://docs.your-site.com) | 💬 [Discord Community](https://discord.gg/your-invite)**
+**🚀 [Live Demo](http://168.231.64.243:8080/)**
 
 ---
 
@@ -407,10 +405,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 **Made with ❤️ by passionate developers for the AI community**
 
 <br>
-
-[![GitHub Repo stars](https://img.shields.io/github/stars/yourusername/stable-diffusion-house-modifier?style=social)](https://github.com/yourusername/stable-diffusion-house-modifier/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/stable-diffusion-house-modifier?style=social)](https://github.com/yourusername/stable-diffusion-house-modifier/network/members)
-[![GitHub watchers](https://img.shields.io/github/watchers/yourusername/stable-diffusion-house-modifier?style=social)](https://github.com/yourusername/stable-diffusion-house-modifier/watchers)
 
 <br>
 
