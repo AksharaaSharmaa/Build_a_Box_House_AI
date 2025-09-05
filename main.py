@@ -35,8 +35,8 @@ app.add_middleware(
 )
 
 # Configuration - Replace with your actual API keys
-STABILITY_API_KEY = ""
-GEMINI_API_KEY = ""
+STABILITY_API_KEY = "sk-SB5H28PO1RD774tJ7vCRAo7PsM2Fbe4wlyuDmOcgBbONe3Fy"
+GEMINI_API_KEY = "AIzaSyAiXmO_cO64cFvUUI2vtwj3bBD43SWNEDw"
 
 # Fixed strength parameter for image-to-image operations
 FIXED_IMAGE_TO_IMAGE_STRENGTH = 0.65
