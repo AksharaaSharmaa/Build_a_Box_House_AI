@@ -11,7 +11,7 @@
 
 <br>
 
-**🚀 [Live Demo]((http://boxhouseai.com/))**
+**🚀 Live Demo: (http://boxhouseai.com/**
 
 ---
 
