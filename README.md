@@ -11,7 +11,7 @@
 
 <br>
 
-**🚀 [Live Demo]((https://build-a-box-house-ai.onrender.com/))**
+**🚀 [Live Demo]((http://boxhouseai.com/))**
 
 ---
 
